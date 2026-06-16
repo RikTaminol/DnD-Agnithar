@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Compendium of Agnithar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #c9a227; --gold-light: #e8c96a; --gold-dark: #7a5c0a;
+  --ember: #d4501a; --shadow: #0e0a06; --parchment: #1e160c;
+  --text: #e8dcc8; --text-dim: #a08060; --divider: rgba(201,162,39,0.25);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--shadow);
+  color: var(--text);
+  font-family: 'EB Garamond', serif;
+  font-size: 17px;
+  line-height: 1.75;
+  min-height: 100vh;
+  background-image: radial-gradient(ellipse 100% 55% at 50% 0%, rgba(212,80,26,0.1) 0%, transparent 65%);
+}
+
+/* ── NAV ── */
+.gnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(14,10,6,0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--divider);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 4px;
+  overflow-x: auto;
+}
+.gnav-brand {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.65rem; color: var(--gold);
+  letter-spacing: 0.08em; white-space: nowrap;
+  padding: 15px 0; flex-shrink: 0; margin-right: 12px;
+}
+.gnav-sep { color: var(--divider); padding: 14px 6px; font-size: 0.9rem; flex-shrink: 0; }
+.gnav a {
+  font-family: 'Cinzel', serif; font-size: 0.63rem;
+  letter-spacing: 0.12em; color: var(--text-dim);
+  text-decoration: none; padding: 14px 10px;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.gnav a:hover, .gnav a.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+/* ── HUB HEADER ── */
+.hub-header {
+  text-align: center;
+  padding: 100px 24px 64px;
+  position: relative;
+}
+.hub-header::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 50% 10%, rgba(201,162,39,0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+.eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem; letter-spacing: 0.45em;
+  color: var(--gold); text-transform: uppercase; opacity: 0.65;
+  margin-bottom: 18px;
+}
+.hub-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2.6rem, 8vw, 5.5rem);
+  color: var(--gold-light);
+  text-shadow: 0 0 80px rgba(201,162,39,0.45), 0 2px 16px rgba(0,0,0,0.95);
+  letter-spacing: 0.04em; line-height: 1.1;
+  margin-bottom: 14px;
+}
+.hub-sub {
+  font-family: 'Cinzel', serif;
+  font-size: 0.88rem; color: var(--text-dim);
+  letter-spacing: 0.22em; font-style: italic;
+  margin-bottom: 30px;
+}
+.rule {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; max-width: 360px; margin: 0 auto 28px;
+}
+.rule::before { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold)); }
+.rule::after  { content: ''; flex: 1; height: 1px; background: linear-gradient(to left,  transparent, var(--gold)); }
+.rule span { color: var(--gold); font-size: 1rem; }
+.hub-date {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem; letter-spacing: 0.2em;
+  color: var(--ember); text-transform: uppercase; opacity: 0.85;
+}
+
+/* ── CHAPTER GRID ── */
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 920px; margin: 0 auto;
+  padding: 16px 24px 100px;
+}
+.chapter-card {
+  display: flex; flex-direction: column;
+  background: var(--parchment);
+  border: 1px solid var(--divider);
+  padding: 36px 28px 28px;
+  text-decoration: none; color: inherit;
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+.chapter-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.chapter-card::after {
+  content: ''; position: absolute;
+  bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201,162,39,0.2), transparent);
+}
+.chapter-card:hover {
+  border-color: rgba(201,162,39,0.55);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.55), 0 0 30px rgba(201,162,39,0.07);
+}
+.chapter-card:hover::before { opacity: 1; }
+.chapter-numeral {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.58rem; color: var(--ember);
+  letter-spacing: 0.3em; margin-bottom: 22px; opacity: 0.75;
+}
+.chapter-icon { font-size: 2.6rem; margin-bottom: 18px; }
+.chapter-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.12rem; font-weight: 600;
+  color: var(--gold-light); margin-bottom: 14px; line-height: 1.3;
+}
+.chapter-desc {
+  font-size: 0.92rem; color: var(--text-dim);
+  line-height: 1.75; flex: 1; margin-bottom: 26px;
+}
+.chapter-open {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem; letter-spacing: 0.28em;
+  color: var(--gold); text-transform: uppercase;
+  border-top: 1px solid var(--divider);
+  padding-top: 16px; margin-top: auto;
+  transition: color 0.2s, letter-spacing 0.2s;
+}
+.chapter-card:hover .chapter-open { color: var(--gold-light); letter-spacing: 0.35em; }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 32px 24px 52px;
+  border-top: 1px solid var(--divider);
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem; letter-spacing: 0.22em;
+  color: var(--gold-dark); text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<nav class="gnav">
+  <span class="gnav-brand">⚔ COMPENDIUM OF AGNITHAR</span>
+  <span class="gnav-sep">|</span>
+  <a href="mythology.html">Mythology</a>
+  <a href="recap.html">Recaps</a>
+  <a href="maps.html">Maps</a>
+  <a href="characters.html">Characters</a>
+</nav>
+
+<header class="hub-header">
+  <p class="eyebrow">The World of Agnithar</p>
+  <h1 class="hub-title">The Compendium</h1>
+  <p class="hub-sub">A Player's Reference to the World</p>
+  <div class="rule"><span>✦</span></div>
+  <p class="hub-date">14th Day of Morden's Axe &nbsp;·&nbsp; 11th Month &nbsp;·&nbsp; 728 AC</p>
+</header>
+
+<main>
+  <div class="chapter-grid">
+
+    <a href="mythology.html" class="chapter-card">
+      <div class="chapter-numeral">CHAPTER I</div>
+      <div class="chapter-icon">🔥</div>
+      <div class="chapter-title">Mythology &amp; Pantheon</div>
+      <div class="chapter-desc">The gods, the ages, and the making of the world — from Agnithar's first forging at Caldur's fire to the founding of the Empire of Dawn and the world you now walk through.</div>
+      <div class="chapter-open">Open Chapter →</div>
+    </a>
+
+    <a href="recap.html" class="chapter-card">
+      <div class="chapter-numeral">CHAPTER II</div>
+      <div class="chapter-icon">📜</div>
+      <div class="chapter-title">Session Recaps</div>
+      <div class="chapter-desc">A chronicle of the party's deeds — from the wine cellars of Harvestshire to the burning vaults of Grun Dhonir and the golden carriage of a dragon. Catch up before every session.</div>
+      <div class="chapter-open">Open Chapter →</div>
+    </a>
+
+    <a href="maps.html" class="chapter-card">
+      <div class="chapter-numeral">CHAPTER III</div>
+      <div class="chapter-icon">🗺</div>
+      <div class="chapter-title">Maps</div>
+      <div class="chapter-desc">Lands seen, roads traveled, cities visited. Every map the party has collected or laid eyes upon, gathered in one place for easy reference.</div>
+      <div class="chapter-open">Open Chapter →</div>
+    </a>
+
+    <a href="characters.html" class="chapter-card">
+      <div class="chapter-numeral">CHAPTER IV</div>
+      <div class="chapter-icon">⚔</div>
+      <div class="chapter-title">The Adventurers</div>
+      <div class="chapter-desc">The souls who shape this story — their pasts, their burdens, their personal quests, and the strange forces that bound them together under Samuel Dice's caravan.</div>
+      <div class="chapter-open">Open Chapter →</div>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  The World of Agnithar &nbsp;✦&nbsp; All content is canonical &nbsp;✦&nbsp; For the players of this campaign
+</footer>
+
+</body>
+</html>
