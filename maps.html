@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maps — The Compendium of Agnithar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:       #c9a227;
+  --gold-light: #e8c96a;
+  --gold-dark:  #7a5c0a;
+  --ember:      #d4501a;
+  --shadow:     #0e0a06;
+  --parchment:  #1e160c;
+  --stone:      #2a2218;
+  --text:       #e8dcc8;
+  --text-dim:   #a08060;
+  --divider:    rgba(201,162,39,0.25);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--shadow);
+  color: var(--text);
+  font-family: 'EB Garamond', serif;
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-x: hidden;
+  background-image: radial-gradient(ellipse 120% 55% at 50% 0%, rgba(212,80,26,0.07) 0%, transparent 65%);
+}
+
+/* ── NAV ── */
+.gnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(14,10,6,0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--divider);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 4px;
+  overflow-x: auto;
+}
+.gnav-brand {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.65rem; color: var(--gold);
+  letter-spacing: 0.08em; white-space: nowrap;
+  padding: 15px 0; flex-shrink: 0; margin-right: 12px;
+}
+.gnav-sep { color: var(--divider); padding: 14px 6px; font-size: 0.9rem; flex-shrink: 0; }
+.gnav a {
+  font-family: 'Cinzel', serif; font-size: 0.63rem;
+  letter-spacing: 0.12em; color: var(--text-dim);
+  text-decoration: none; padding: 14px 10px;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.gnav a:hover, .gnav a.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+/* ── HEADER ── */
+header {
+  text-align: center;
+  padding: 80px 24px 60px;
+  position: relative; overflow: hidden;
+}
+header::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 100% at 50% 0%, rgba(201,162,39,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.eyebrow {
+  font-family: 'Cinzel', serif; font-size: 0.65rem;
+  letter-spacing: 0.45em; color: var(--gold);
+  text-transform: uppercase; opacity: 0.65; margin-bottom: 16px;
+}
+.page-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2rem, 6vw, 3.8rem);
+  color: var(--gold-light);
+  text-shadow: 0 0 60px rgba(201,162,39,0.4), 0 2px 8px rgba(0,0,0,0.8);
+  letter-spacing: 0.05em; line-height: 1.2; margin-bottom: 8px;
+}
+.page-sub {
+  font-family: 'Cinzel', serif; font-size: 0.85rem;
+  color: var(--gold); letter-spacing: 0.2em; opacity: 0.6; margin-bottom: 32px;
+}
+.header-rule {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; max-width: 400px; margin: 0 auto 28px;
+}
+.header-rule::before { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold)); }
+.header-rule::after  { content: ''; flex: 1; height: 1px; background: linear-gradient(to left,  transparent, var(--gold)); }
+.header-rule span { color: var(--gold); font-size: 1.1rem; }
+.intro-text {
+  max-width: 600px; margin: 0 auto;
+  color: var(--text-dim); font-style: italic;
+  font-size: 1.02rem; line-height: 1.8;
+}
+
+/* ── MAP SECTIONS ── */
+.maps-wrapper {
+  max-width: 1100px; margin: 0 auto;
+  padding: 48px 24px 100px;
+  display: flex; flex-direction: column; gap: 80px;
+}
+
+.map-section-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem; letter-spacing: 0.4em;
+  text-transform: uppercase; color: var(--ember);
+  margin-bottom: 8px;
+}
+.map-section-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.3rem; color: var(--gold-light);
+  margin-bottom: 6px;
+}
+.map-section-desc {
+  font-size: 0.92rem; color: var(--text-dim);
+  margin-bottom: 28px; max-width: 600px; line-height: 1.7;
+}
+.map-section-divider {
+  width: 60px; height: 1px;
+  background: var(--divider); margin-bottom: 28px;
+}
+
+/* ── MAP GRID ── */
+.map-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+.map-card {
+  background: var(--parchment);
+  border: 1px solid var(--divider);
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+.map-card:hover {
+  border-color: rgba(201,162,39,0.5);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(201,162,39,0.06);
+}
+
+/* map image container */
+.map-img-wrap {
+  position: relative;
+  width: 100%; aspect-ratio: 4 / 3;
+  overflow: hidden; background: var(--stone);
+}
+.map-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.map-card:hover .map-img-wrap img { transform: scale(1.03); }
+
+/* placeholder for missing images */
+.map-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(201,162,39,0.03) 0px, rgba(201,162,39,0.03) 1px,
+    transparent 1px, transparent 12px
+  );
+  border-bottom: 1px dashed rgba(201,162,39,0.25);
+}
+.map-placeholder .ph-icon { font-size: 2.2rem; opacity: 0.25; }
+.map-placeholder .ph-label {
+  font-family: 'Cinzel', serif; font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold-dark); opacity: 0.7;
+}
+.map-placeholder .ph-filename {
+  font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: 0.78rem; color: var(--text-dim); opacity: 0.5;
+}
+
+/* zoom overlay */
+.map-img-wrap::after {
+  content: '🔍';
+  position: absolute; bottom: 10px; right: 12px;
+  font-size: 1rem; opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
+}
+.map-card:hover .map-img-wrap::after { opacity: 0.6; }
+
+/* map card info */
+.map-info { padding: 18px 20px 20px; }
+.map-name {
+  font-family: 'Cinzel', serif; font-size: 0.95rem;
+  font-weight: 600; color: var(--text); margin-bottom: 4px;
+}
+.map-caption {
+  font-size: 0.85rem; color: var(--text-dim);
+  line-height: 1.6;
+}
+.map-tag {
+  display: inline-block; margin-top: 10px;
+  font-family: 'Cinzel', serif; font-size: 0.57rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold-dark); border: 1px solid var(--divider);
+  padding: 2px 8px;
+}
+
+/* ── LIGHTBOX ── */
+#lightbox {
+  display: none;
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(8,5,2,0.93);
+  align-items: center; justify-content: center;
+  padding: 24px;
+  cursor: zoom-out;
+}
+#lightbox.open { display: flex; }
+#lightbox img {
+  max-width: 92vw; max-height: 88vh;
+  object-fit: contain;
+  border: 1px solid var(--divider);
+  box-shadow: 0 0 80px rgba(0,0,0,0.8);
+}
+#lb-close {
+  position: absolute; top: 20px; right: 24px;
+  font-family: 'Cinzel', serif; font-size: 0.65rem;
+  letter-spacing: 0.2em; color: var(--text-dim);
+  cursor: pointer; background: none; border: none;
+  transition: color 0.2s;
+}
+#lb-close:hover { color: var(--gold-light); }
+#lb-caption {
+  position: absolute; bottom: 20px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cinzel', serif; font-size: 0.65rem;
+  letter-spacing: 0.2em; color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center; padding: 32px 24px 52px;
+  border-top: 1px solid var(--divider);
+  font-family: 'Cinzel', serif; font-size: 0.6rem;
+  letter-spacing: 0.22em; color: var(--gold-dark); text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .map-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="gnav">
+  <span class="gnav-brand">⚔ COMPENDIUM OF AGNITHAR</span>
+  <span class="gnav-sep">|</span>
+  <a href="index.html">Home</a>
+  <a href="mythology.html">Mythology</a>
+  <a href="recap.html">Recaps</a>
+  <a href="maps.html" class="active">Maps</a>
+  <a href="characters.html">Characters</a>
+</nav>
+
+<header>
+  <p class="eyebrow">The Compendium of Agnithar</p>
+  <h1 class="page-title">Maps</h1>
+  <p class="page-sub">Lands Seen &amp; Roads Traveled</p>
+  <div class="header-rule"><span>✦</span></div>
+  <p class="intro-text">
+    Every map the party has laid eyes upon, gathered in one place. From the broad strokes of the known world to the claustrophobic tunnels beneath Grun Dhonir.
+  </p>
+</header>
+
+<div class="maps-wrapper">
+
+  <!-- ═══ WORLD MAPS ═══ -->
+  <div class="map-section">
+    <div class="map-section-label">Chapter I</div>
+    <div class="map-section-title">The Known World</div>
+    <div class="map-section-divider"></div>
+    <div class="map-section-desc">The world of Agnithar — three continents separated by the Great Maelstrom, and a sun called Caldur that the god of the same name created it all around.</div>
+    <div class="map-grid">
+
+      <div class="map-card" onclick="openLightbox('map_world_havilaria.jpg', 'Havilaria — The Imperial Continent')">
+        <div class="map-img-wrap">
+          <!-- Replace the placeholder below with:
+               <img src="map_world_havilaria.jpg" alt="Map of Havilaria"> -->
+          <div class="map-placeholder">
+            <div class="ph-icon">🗺</div>
+            <div class="ph-label">Image Placeholder</div>
+            <div class="ph-filename">map_world_havilaria.jpg</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div class="map-name">Havilaria</div>
+          <div class="map-caption">The Imperial Continent — home to the Empire of Dawn, the Northern Kingdom, the Barren Blazes, and the Green Belt.</div>
+          <span class="map-tag">World Map</span>
+        </div>
+      </div>
+
+      <div class="map-card" onclick="openLightbox('map_world_full.jpg', 'The World of Agnithar')">
+        <div class="map-img-wrap">
+          <!-- Replace: <img src="map_world_full.jpg" alt="Full World Map"> -->
+          <div class="map-placeholder">
+            <div class="ph-icon">🌍</div>
+            <div class="ph-label">Image Placeholder</div>
+            <div class="ph-filename">map_world_full.jpg</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div class="map-name">The World of Agnithar</div>
+          <div class="map-caption">All known continents: Havilaria to the north, Pyramon to the west, Fyrakis to the east, and the Southern Isles below the Great Maelstrom.</div>
+          <span class="map-tag">World Map</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ REGIONAL MAPS ═══ -->
+  <div class="map-section">
+    <div class="map-section-label">Chapter II</div>
+    <div class="map-section-title">Regions &amp; Territories</div>
+    <div class="map-section-divider"></div>
+    <div class="map-section-desc">Regional maps of the areas the party has traveled through — from the fertile Heartlands to the dwarven stronghold of the Great Hills.</div>
+    <div class="map-grid">
+
+      <div class="map-card" onclick="openLightbox('map_heartlands.jpg', 'The Heartlands')">
+        <div class="map-img-wrap">
+          <!-- Replace: <img src="map_heartlands.jpg" alt="Map of the Heartlands"> -->
+          <div class="map-placeholder">
+            <div class="ph-icon">🌾</div>
+            <div class="ph-label">Image Placeholder</div>
+            <div class="ph-filename">map_heartlands.jpg</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div class="map-name">The Heartlands</div>
+          <div class="map-caption">The breadbasket of the Empire. Harvestshire, Willowfen, Thermalin, and the roads the party traveled before the voyage south.</div>
+          <span class="map-tag">Regional</span>
+        </div>
+      </div>
+
+      <div class="map-card" onclick="openLightbox('map_lowlands.jpg', 'The Lowlands')">
+        <div class="map-img-wrap">
+          <!-- Replace: <img src="map_lowlands.jpg" alt="Map of the Lowlands"> -->
+          <div class="map-placeholder">
+            <div class="ph-icon">🏔</div>
+            <div class="ph-label">Image Placeholder</div>
+            <div class="ph-filename">map_lowlands.jpg</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div class="map-name">The Lowlands</div>
+          <div class="map-caption">The defensive heartland south of Havilar's Crossing. Home to the Gates of Dawn, the Great Hills, and Grun Dhonir.</div>
+          <span class="map-tag">Regional</span>
+        </div>
+      </div>
+
+      <div class="map-card" onclick="openLightbox('map_havilars_crossing.jpg', \"Havilar's Crossing\")">
+        <div class="map-img-wrap">
+          <!-- Replace: <img src="map_havilars_crossing.jpg" alt="Map of Havilar's Crossing"> -->
+          <div class="map-placeholder">
+            <div class="ph-icon">🏛</div>
+            <div class="ph-label">Image Placeholder</div>
+            <div class="ph-filename">map_havilars_crossing.jpg</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div class="map-name">Havilar's Crossing</div>
+          <div class="map-caption">The Imperial Capital — built upon a narrow isthmus, flanked by cliffs 300 metres high, the two titanic harbour tunnels cutting straight through the rock.</div>
+          <span class="map-tag">City Map</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ CITY / LOCAL MAPS ═══ -->
+  <div class="map-section">
+    <div class="map-section-label">Chapter III</div>
+    <div class="map-section-title">Cities &amp; Local Areas</div>
+    <div class="map-section-divider"></div>
+    <div class="map-section-desc">Detailed maps of settlements the party has visited — useful for navigating streets, finding establishments, and remembering who lives where.</div>
+    <div class="map-grid">
+
+      <div class="map-card" onclick="openLightbox('map_grun_dhonir.jpg', 'Grun Dhonir — The City of Steel')">
+        <div class="map-img-wrap">
+          <!-- Replace: <img src="map_grun_dhonir.jpg" alt="Map of Grun Dhonir"> -->
+          <div class="map-placeholder">
+            <div class="ph-icon">⚒</div>
+            <div class="ph-label">Image Placeholder</div>
+            <div class="ph-filename">map_grun_dhonir.jpg</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div class="map-name">Grun Dhonir</div>
+          <div class="map-caption">The City of Steel. Steel Exchange, Hearthrift Ward, Deepforge Quarter, the Dhonirian Bazaar — and the restricted districts the party broke into.</div>
+          <span class="map-tag">City Map</span>
+        </div>
+      </div>
+
+      <div class="map-card" onclick="openLightbox('map_harvestshire.jpg', 'Harvestshire')">
+        <div class="map-img-wrap">
+          <!-- Replace: <img src="map_harvestshire.jpg" alt="Map of Harvestshire"> -->
+          <div class="map-placeholder">
+            <div class="ph-icon">🍷</div>
+            <div class="ph-label">Image Placeholder</div>
+            <div class="ph-filename">map_harvestshire.jpg</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div class="map-name">Harvestshire</div>
+          <div class="map-caption">Capital of the Heartlands. Grapevine Square, Barleycorn Square, and the Redheart Winery where the party holds a stake.</div>
+          <span class="map-tag">City Map</span>
+        </div>
+      </div>
+
+      <div class="map-card" onclick="openLightbox('map_vaults_of_lore.jpg', 'Vaults of Lore — Grun Dhonir')">
+        <div class="map-img-wrap">
+          <!-- Replace: <img src="map_vaults_of_lore.jpg" alt="Map of the Vaults of Lore"> -->
+          <div class="map-placeholder">
+            <div class="ph-icon">📚</div>
+            <div class="ph-label">Image Placeholder</div>
+            <div class="ph-filename">map_vaults_of_lore.jpg</div>
+          </div>
+        </div>
+        <div class="map-info">
+          <div class="map-name">Vaults of Lore</div>
+          <div class="map-caption">The sacred archive district of Grun Dhonir — now partially in ashes. The scene of the heist, the betrayal, and the fire that shouldn't have started.</div>
+          <span class="map-tag">Dungeon Map</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ── LIGHTBOX ── -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lb-close" onclick="closeLightbox()">✕ CLOSE</button>
+  <img id="lb-img" src="" alt="">
+  <div id="lb-caption"></div>
+</div>
+
+<footer>
+  The World of Agnithar &nbsp;✦&nbsp; All content is canonical &nbsp;✦&nbsp; 728 AC
+</footer>
+
+<script>
+function openLightbox(src, caption) {
+  const img = document.getElementById('lb-img');
+  img.src = src;
+  img.alt = caption;
+  document.getElementById('lb-caption').textContent = caption;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>

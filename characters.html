@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Adventurers — The Compendium of Agnithar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:       #c9a227;
+  --gold-light: #e8c96a;
+  --gold-dark:  #7a5c0a;
+  --ember:      #d4501a;
+  --shadow:     #0e0a06;
+  --parchment:  #1e160c;
+  --stone:      #2a2218;
+  --text:       #e8dcc8;
+  --text-dim:   #a08060;
+  --divider:    rgba(201,162,39,0.25);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--shadow);
+  color: var(--text);
+  font-family: 'EB Garamond', serif;
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-x: hidden;
+  background-image: radial-gradient(ellipse 120% 55% at 50% 0%, rgba(212,80,26,0.07) 0%, transparent 65%);
+}
+
+/* ── NAV ── */
+.gnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(14,10,6,0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--divider);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 4px; overflow-x: auto;
+}
+.gnav-brand {
+  font-family: 'Cinzel Decorative', serif; font-size: 0.65rem;
+  color: var(--gold); letter-spacing: 0.08em; white-space: nowrap;
+  padding: 15px 0; flex-shrink: 0; margin-right: 12px;
+}
+.gnav-sep { color: var(--divider); padding: 14px 6px; font-size: 0.9rem; flex-shrink: 0; }
+.gnav a {
+  font-family: 'Cinzel', serif; font-size: 0.63rem;
+  letter-spacing: 0.12em; color: var(--text-dim);
+  text-decoration: none; padding: 14px 10px;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.gnav a:hover, .gnav a.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+/* ── HEADER ── */
+header {
+  text-align: center; padding: 80px 24px 60px;
+  position: relative; overflow: hidden;
+}
+header::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 100% at 50% 0%, rgba(201,162,39,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.eyebrow {
+  font-family: 'Cinzel', serif; font-size: 0.65rem;
+  letter-spacing: 0.45em; color: var(--gold);
+  text-transform: uppercase; opacity: 0.65; margin-bottom: 16px;
+}
+.page-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2rem, 6vw, 3.8rem); color: var(--gold-light);
+  text-shadow: 0 0 60px rgba(201,162,39,0.4), 0 2px 8px rgba(0,0,0,0.8);
+  letter-spacing: 0.05em; line-height: 1.2; margin-bottom: 8px;
+}
+.page-sub {
+  font-family: 'Cinzel', serif; font-size: 0.85rem;
+  color: var(--gold); letter-spacing: 0.2em; opacity: 0.6; margin-bottom: 32px;
+}
+.header-rule {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; max-width: 400px; margin: 0 auto 28px;
+}
+.header-rule::before { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold)); }
+.header-rule::after  { content: ''; flex: 1; height: 1px; background: linear-gradient(to left,  transparent, var(--gold)); }
+.header-rule span { color: var(--gold); font-size: 1.1rem; }
+.intro-text {
+  max-width: 620px; margin: 0 auto;
+  color: var(--text-dim); font-style: italic; font-size: 1.02rem; line-height: 1.8;
+}
+
+/* ── CHARACTER SECTION DIVIDER ── */
+.section-break {
+  display: flex; align-items: center; gap: 20px;
+  max-width: 1080px; margin: 0 auto 44px; padding: 0 24px;
+}
+.section-break::before, .section-break::after {
+  content: ''; flex: 1; height: 1px; background: var(--divider);
+}
+.section-break-label {
+  font-family: 'Cinzel', serif; font-size: 0.62rem;
+  letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold-dark);
+  white-space: nowrap;
+}
+
+/* ── ACTIVE PARTY ── */
+.party-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 28px;
+  max-width: 1080px; margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.char-card {
+  background: var(--parchment);
+  border: 1px solid var(--divider);
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, box-shadow 0.3s;
+}
+.char-card.visible { opacity: 1; transform: translateY(0); }
+.char-card:hover {
+  border-color: rgba(201,162,39,0.5);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(201,162,39,0.06);
+}
+/* top accent line */
+.char-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.char-card:hover::before { opacity: 1; }
+
+/* portrait */
+.char-portrait {
+  width: 100%; aspect-ratio: 3 / 4;
+  overflow: hidden; position: relative;
+  background: var(--stone);
+}
+.char-portrait img {
+  width: 100%; height: 100%; object-fit: cover;
+  display: block; transition: transform 0.4s ease;
+  filter: sepia(0.15) contrast(1.05);
+}
+.char-card:hover .char-portrait img { transform: scale(1.03); }
+
+/* portrait placeholder */
+.char-portrait-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  background: repeating-linear-gradient(
+    45deg, rgba(201,162,39,0.03) 0px, rgba(201,162,39,0.03) 1px,
+    transparent 1px, transparent 12px
+  );
+}
+.char-portrait-placeholder .ph-icon { font-size: 3rem; opacity: 0.2; }
+.char-portrait-placeholder .ph-label {
+  font-family: 'Cinzel', serif; font-size: 0.58rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold-dark); opacity: 0.6;
+}
+.char-portrait-placeholder .ph-filename {
+  font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: 0.75rem; color: var(--text-dim); opacity: 0.45;
+}
+
+/* status badge on portrait */
+.char-status-badge {
+  position: absolute; bottom: 12px; left: 12px;
+  font-family: 'Cinzel', serif; font-size: 0.55rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 3px 10px;
+  backdrop-filter: blur(4px);
+}
+.badge-active  { background: rgba(14,10,6,0.8); color: var(--gold-light); border: 1px solid rgba(201,162,39,0.4); }
+.badge-away    { background: rgba(14,10,6,0.8); color: #6ab0d4;            border: 1px solid rgba(106,176,212,0.4); }
+.badge-missing { background: rgba(14,10,6,0.8); color: var(--text-dim);    border: 1px solid var(--divider); }
+
+/* body */
+.char-body { padding: 22px 22px 24px; }
+.char-class-line {
+  font-family: 'Cinzel', serif; font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ember); margin-bottom: 4px;
+}
+.char-name {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.25rem; color: var(--gold-light);
+  margin-bottom: 2px; line-height: 1.2;
+}
+.char-alias {
+  font-style: italic; font-size: 0.85rem;
+  color: var(--text-dim); margin-bottom: 14px;
+}
+.char-divider { width: 32px; height: 1px; background: var(--divider); margin-bottom: 14px; }
+.char-desc {
+  font-size: 0.93rem; color: var(--text);
+  line-height: 1.75; margin-bottom: 18px;
+}
+
+/* stat row */
+.char-stats {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px 16px; margin-bottom: 18px;
+}
+.char-stat-item {}
+.stat-label {
+  font-family: 'Cinzel', serif; font-size: 0.55rem;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold-dark); margin-bottom: 1px;
+}
+.stat-val {
+  font-size: 0.88rem; color: var(--text-dim);
+}
+
+/* quest hooks */
+.char-quest {
+  border-top: 1px solid var(--divider); padding-top: 14px;
+  margin-top: 4px;
+}
+.quest-label {
+  font-family: 'Cinzel', serif; font-size: 0.58rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 8px;
+}
+.quest-text { font-size: 0.88rem; color: var(--text-dim); line-height: 1.65; }
+
+/* ── INACTIVE / ALLY SECTION ── */
+.allies-wrapper {
+  max-width: 1080px; margin: 0 auto;
+  padding: 0 24px 100px;
+}
+.ally-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.ally-card {
+  background: var(--parchment); border: 1px solid var(--divider);
+  padding: 18px 20px;
+  transition: border-color 0.3s;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.45s ease, transform 0.45s ease, border-color 0.3s;
+}
+.ally-card.visible { opacity: 1; transform: translateY(0); }
+.ally-card:hover { border-color: rgba(201,162,39,0.4); }
+.ally-group {
+  font-family: 'Cinzel', serif; font-size: 0.57rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  margin-bottom: 6px; display: inline-block; padding: 2px 8px;
+}
+.group-ally    { color: #6ab0d4; border: 1px solid rgba(106,176,212,0.35); }
+.group-inactive { color: var(--text-dim); border: 1px solid var(--divider); }
+.group-dead    { color: #a04848; border: 1px solid rgba(160,72,72,0.4); }
+
+.ally-name {
+  font-family: 'Cinzel', serif; font-size: 1rem;
+  font-weight: 600; color: var(--text); margin: 6px 0 3px;
+}
+.ally-title {
+  font-style: italic; font-size: 0.82rem;
+  color: var(--gold); margin-bottom: 10px;
+}
+.ally-desc { font-size: 0.87rem; color: var(--text-dim); line-height: 1.65; }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center; padding: 32px 24px 52px;
+  border-top: 1px solid var(--divider);
+  font-family: 'Cinzel', serif; font-size: 0.6rem;
+  letter-spacing: 0.22em; color: var(--gold-dark); text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .party-grid { grid-template-columns: 1fr; }
+  .ally-grid  { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="gnav">
+  <span class="gnav-brand">⚔ COMPENDIUM OF AGNITHAR</span>
+  <span class="gnav-sep">|</span>
+  <a href="index.html">Home</a>
+  <a href="mythology.html">Mythology</a>
+  <a href="recap.html">Recaps</a>
+  <a href="maps.html">Maps</a>
+  <a href="characters.html" class="active">Characters</a>
+</nav>
+
+<header>
+  <p class="eyebrow">The Compendium of Agnithar</p>
+  <h1 class="page-title">The Adventurers</h1>
+  <p class="page-sub">Those Who Shape This Story</p>
+  <div class="header-rule"><span>✦</span></div>
+  <p class="intro-text">
+    The souls bound together under Samuel Dice's caravan — each carrying a past, a purpose, and a personal quest they haven't fully explained to anyone else.
+  </p>
+</header>
+
+<!-- ════════════ ACTIVE PARTY ════════════ -->
+<div style="max-width:1080px;margin:48px auto 28px;padding:0 24px;">
+  <div class="section-break" style="margin:0 0 36px;padding:0;">
+    <div class="section-break-label" style="margin:0;">Active Party</div>
+  </div>
+</div>
+
+<div class="party-grid">
+
+  <!-- ── GU REED ── -->
+  <div class="char-card">
+    <div class="char-portrait">
+      <!-- Replace: <img src="char_gu_reed.jpg" alt="Gu Reed"> -->
+      <div class="char-portrait-placeholder">
+        <div class="ph-icon">🐾</div>
+        <div class="ph-label">Portrait Placeholder</div>
+        <div class="ph-filename">char_gu_reed.jpg</div>
+      </div>
+      <div class="char-status-badge badge-active">Active</div>
+    </div>
+    <div class="char-body">
+      <div class="char-class-line">Bugbear · Ranger (Fey Wanderer)</div>
+      <div class="char-name">Gu Reed</div>
+      <div class="char-alias">formerly known as Bilbus Elderberry · "The Glitter King"</div>
+      <div class="char-divider"></div>
+      <div class="char-desc">
+        A reformed smuggler who built an empire in hidden caves and lost it to betrayal. Revived by a mysterious fey entity, he spent years in disguise before shedding the alias and returning to himself. Two horns have since grown from his head — an unexplained side effect of resurrection. He moves through the world with the confidence of someone who has survived everything thrown at him and expects to survive whatever comes next.
+      </div>
+      <div class="char-stats">
+        <div class="char-stat-item">
+          <div class="stat-label">Alignment</div>
+          <div class="stat-val">Lawful Neutral</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Religion</div>
+          <div class="stat-val">The Feywild</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Languages</div>
+          <div class="stat-val">Common, Goblin, Sylvan, Undercommon</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Affiliation</div>
+          <div class="stat-val">The Glittering Smugglers</div>
+        </div>
+      </div>
+      <div class="char-quest">
+        <div class="quest-label">Personal Quest</div>
+        <div class="quest-text">Track down Flingus Bogbelly — the former enforcer who beat him nearly to death, looted his fey-touched cavern, and triggered the event that changed everything. Understand why he was revived. And repay whatever debt he owes the entity that saved him.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── LANDO ASHVEIL ── -->
+  <div class="char-card">
+    <div class="char-portrait">
+      <!-- Replace: <img src="char_lando_ashveil.jpg" alt="Lando Ashveil"> -->
+      <div class="char-portrait-placeholder">
+        <div class="ph-icon">🔥</div>
+        <div class="ph-label">Portrait Placeholder</div>
+        <div class="ph-filename">char_lando_ashveil.jpg</div>
+      </div>
+      <div class="char-status-badge badge-active">Active</div>
+    </div>
+    <div class="char-body">
+      <div class="char-class-line">Tiefling · Warlock — Fiend (Pact of the Tome)</div>
+      <div class="char-name">Lando Ashveil</div>
+      <div class="char-alias">"the flamebearer"</div>
+      <div class="char-divider"></div>
+      <div class="char-desc">
+        Born in hiding in the frozen north, his parents fugitives from powers that eventually found them. After their deaths, Lando survived alone until a blizzard drove him into a cave — where a dying fiend named Asharoth offered a desperate bargain. Years of vigilante justice followed, fuelled by vengeance and growing infernal power. He carries a blind left eye scarred across his face, an Infernal Tome, and a Silver dragon egg bonded to him before he even knew it existed.
+      </div>
+      <div class="char-stats">
+        <div class="char-stat-item">
+          <div class="stat-label">Alignment</div>
+          <div class="stat-val">Lawful Neutral</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Patron</div>
+          <div class="stat-val">Asharoth (Fiend)</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Languages</div>
+          <div class="stat-val">Common, Infernal, Northern</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Bond</div>
+          <div class="stat-val">Silver Dragon Egg</div>
+        </div>
+      </div>
+      <div class="char-quest">
+        <div class="quest-label">Personal Quest</div>
+        <div class="quest-text">Find the surviving members of the Black Banner mercenary company — the men hired to kill his family. The Coin &amp; Corpse tavern in Havilar's Crossing is the lead. Meanwhile, decide what to do when Asharoth eventually asks for more than guilty blood.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── GROG FULLMUG ── -->
+  <div class="char-card">
+    <div class="char-portrait">
+      <!-- Replace: <img src="char_grog_fullmug.jpg" alt="Grog Fullmug"> -->
+      <div class="char-portrait-placeholder">
+        <div class="ph-icon">🎵</div>
+        <div class="ph-label">Portrait Placeholder</div>
+        <div class="ph-filename">char_grog_fullmug.jpg</div>
+      </div>
+      <div class="char-status-badge badge-active">Active</div>
+    </div>
+    <div class="char-body">
+      <div class="char-class-line">Goblin · Bard (College of Lore)</div>
+      <div class="char-name">Grog Fullmug</div>
+      <div class="char-alias">"Song-Smasher"</div>
+      <div class="char-divider"></div>
+      <div class="char-desc">
+        3'4" of chaos, ale-stained ambition, and a grin too wide for his face. Raised in Grimblethorn — a rare goblin village that prized old songs and history — Grog was separated from his parents at age six when cloaked figures in dark green raided the village looking for something. He escaped through a smuggler's tunnel with two heirlooms: a dented brass tankard and a torn journal page with sheet music on one side and a partial map on the other. His drunken bard persona is a mask. He's been looking for those green-robed figures ever since.
+      </div>
+      <div class="char-stats">
+        <div class="char-stat-item">
+          <div class="stat-label">Alignment</div>
+          <div class="stat-val">Chaotic Neutral</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Languages</div>
+          <div class="stat-val">Common, Goblin</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Heirlooms</div>
+          <div class="stat-val">Brass Tankard, Torn Journal Page</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Origin</div>
+          <div class="stat-val">Grimblethorn, Red Mountains</div>
+        </div>
+      </div>
+      <div class="char-quest">
+        <div class="quest-label">Personal Quest</div>
+        <div class="quest-text">Identify the green-robed Songseekers who destroyed Grimblethorn. Piece together the Last Song — the ancient, world-shaking melody his family were the last guardians of. Understand what his parents meant by: <em>"You were never meant to stay hidden."</em></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BALINOR ── -->
+  <div class="char-card">
+    <div class="char-portrait">
+      <!-- Replace: <img src="char_balinor.jpg" alt="Balinor"> -->
+      <div class="char-portrait-placeholder">
+        <div class="ph-icon">⚡</div>
+        <div class="ph-label">Portrait Placeholder</div>
+        <div class="ph-filename">char_balinor.jpg</div>
+      </div>
+      <div class="char-status-badge badge-away">Separated — Havilar's Crossing</div>
+    </div>
+    <div class="char-body">
+      <div class="char-class-line">Dwarf · Barbarian (Path of the Zealot)</div>
+      <div class="char-name">Balinor</div>
+      <div class="char-alias">"Kegbreaker" · "The Drinking Fury"</div>
+      <div class="char-divider"></div>
+      <div class="char-desc">
+        A 126-year-old mercenary with a mohawk, a beer belly, a reinforced keg for a weapon, and a legend about falling into cursed wine as a child. He joined the caravan for coin. What he didn't plan on was touching a Scion Flame in Willowfen and receiving a vision of the God-King himself. The flame spread up his arm to his neck. His eyes went gold. Havilar asked him if he accepted Justice. He said yes. Now he's in Havilar's Crossing in the hands of the Imperial Seers — and no one is sure what happens next.
+      </div>
+      <div class="char-stats">
+        <div class="char-stat-item">
+          <div class="stat-label">Alignment</div>
+          <div class="stat-val">Chaotic Neutral</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Religion</div>
+          <div class="stat-val">Light of Dawn (converted)</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Weapon</div>
+          <div class="stat-val">The Kegmaul</div>
+        </div>
+        <div class="char-stat-item">
+          <div class="stat-label">Current location</div>
+          <div class="stat-val">Havilar's Crossing</div>
+        </div>
+      </div>
+      <div class="char-quest">
+        <div class="quest-label">Unresolved Thread</div>
+        <div class="quest-text">Havilar told him <em>"Come to my Crossing."</em> He's there now. What the God-King's vision means for a mercenary who didn't even believe in anything a week ago — that's what the Imperial Seers are trying to figure out.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════ INACTIVE / NOTABLE ALLIES ════════════ -->
+<div class="section-break" style="margin-top:20px;">
+  <div class="section-break-label">Notable Allies &amp; Former Companions</div>
+</div>
+
+<div class="allies-wrapper">
+  <div class="ally-grid">
+
+    <div class="ally-card">
+      <span class="ally-group group-ally">Ally</span>
+      <div class="ally-name">Samuel Dice</div>
+      <div class="ally-title">Caravaneer · Former Smuggler</div>
+      <div class="ally-desc">The man who brought the party together. One of the only members ever to leave the Black Ledger Association peacefully. Uses his wide network to help each party member's personal quest in exchange for their service. Currently in Havilar's Crossing.</div>
+    </div>
+
+    <div class="ally-card">
+      <span class="ally-group group-inactive">Inactive</span>
+      <div class="ally-name">Lollylips</div>
+      <div class="ally-title">Paladin of Vengeance</div>
+      <div class="ally-desc">Left the party in Grun Dhonir before the heist, deciding her personal quest took priority over the dragon egg. Headed alone toward Twin Spires. Carries Halvik's Stormbeat Axe as a keepsake.</div>
+    </div>
+
+    <div class="ally-card">
+      <span class="ally-group group-ally">Ally</span>
+      <div class="ally-name">Triv Vago</div>
+      <div class="ally-title">Goblin Rogue · Glittering Smugglers</div>
+      <div class="ally-desc">Gu's right-hand man, running the smuggling operation in his absence. One of the sharpest minds in the criminal underground. Completely loyal — he witnessed Gu's first resurrection and has never told a soul.</div>
+    </div>
+
+    <div class="ally-card">
+      <span class="ally-group group-ally">Ally</span>
+      <div class="ally-name">Aurionthrimar</div>
+      <div class="ally-title">The Golden Pureborn Dragon</div>
+      <div class="ally-desc">Ancient gold dragon and Agnilar's closest non-mortal ally. Revealed himself at the end of the Grun Dhonir arc. Apologized for the egg bait plan going wrong. Taking the party to the Sacred Council Chambers to determine their fate.</div>
+    </div>
+
+    <div class="ally-card">
+      <span class="ally-group group-ally">Ally</span>
+      <div class="ally-name">Vanessa Redheart</div>
+      <div class="ally-title">Owner of the Redheart Winery</div>
+      <div class="ally-desc">Former Black Ledger operative turned winemaker. Stern to strangers, warm to allies. Gu and Lollylips hold a 10% stake each in her winery's income. Her winery is booming after the sabotage attempt was foiled.</div>
+    </div>
+
+    <div class="ally-card">
+      <span class="ally-group group-ally">Ally</span>
+      <div class="ally-name">Vargo Rayne</div>
+      <div class="ally-title">Information Broker · Tavern Owner</div>
+      <div class="ally-desc">Charming minor nobleman who runs information networks out of his taverns across Havilaria. Helped Triv establish a smuggling base in Duskfall. Knows more than he lets on, and lets on more than he should.</div>
+    </div>
+
+    <div class="ally-card">
+      <span class="ally-group group-ally">Ally</span>
+      <div class="ally-name">Beralt of Livia</div>
+      <div class="ally-title">Monster Hunter · The Black Wolf</div>
+      <div class="ally-desc">A Livian professional — pitch-black skin, bone-white dreadlocks, a bardiche that has seen things. Helped the party banish the Banshee of Willowfen. One of the finest hunters in the known world.</div>
+    </div>
+
+    <div class="ally-card">
+      <span class="ally-group group-dead">Deceased</span>
+      <div class="ally-name">Halvik Fjornhall</div>
+      <div class="ally-title">Skald of Cliffholt</div>
+      <div class="ally-desc">A jovial Northerner who swore to follow Gu and write songs about his adventures. Was killed in the pirate attack on the Golden Grace — one of the first casualties. His Stormbeat Axe was taken by Lollylips. He received a Northerner's sea burial on the shores of the Great Hills.</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  The World of Agnithar &nbsp;✦&nbsp; All content is canonical &nbsp;✦&nbsp; 728 AC
+</footer>
+
+<script>
+const cards = document.querySelectorAll('.char-card, .ally-card');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.08 });
+cards.forEach(c => obs.observe(c));
+</script>
+</body>
+</html>

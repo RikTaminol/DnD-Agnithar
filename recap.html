@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Session Recaps — The Compendium of Agnithar</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:       #c9a227;
+  --gold-light: #e8c96a;
+  --gold-dark:  #7a5c0a;
+  --ember:      #d4501a;
+  --shadow:     #0e0a06;
+  --parchment:  #1e160c;
+  --stone:      #2a2218;
+  --text:       #e8dcc8;
+  --text-dim:   #a08060;
+  --divider:    rgba(201,162,39,0.25);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--shadow);
+  color: var(--text);
+  font-family: 'EB Garamond', serif;
+  font-size: 17px;
+  line-height: 1.75;
+  overflow-x: hidden;
+  background-image: radial-gradient(ellipse 120% 55% at 50% 0%, rgba(212,80,26,0.07) 0%, transparent 65%);
+}
+
+/* ── NAV ── */
+.gnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(14,10,6,0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--divider);
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 4px;
+  overflow-x: auto;
+}
+.gnav-brand {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 0.65rem; color: var(--gold);
+  letter-spacing: 0.08em; white-space: nowrap;
+  padding: 15px 0; flex-shrink: 0; margin-right: 12px;
+}
+.gnav-sep { color: var(--divider); padding: 14px 6px; font-size: 0.9rem; flex-shrink: 0; }
+.gnav a {
+  font-family: 'Cinzel', serif; font-size: 0.63rem;
+  letter-spacing: 0.12em; color: var(--text-dim);
+  text-decoration: none; padding: 14px 10px;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.gnav a:hover, .gnav a.active { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+/* ── HEADER ── */
+header {
+  text-align: center;
+  padding: 80px 24px 60px;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 100% at 50% 0%, rgba(201,162,39,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem; letter-spacing: 0.45em;
+  color: var(--gold); text-transform: uppercase; opacity: 0.65;
+  margin-bottom: 16px;
+}
+.page-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(2rem, 6vw, 3.8rem);
+  color: var(--gold-light);
+  text-shadow: 0 0 60px rgba(201,162,39,0.4), 0 2px 8px rgba(0,0,0,0.8);
+  letter-spacing: 0.05em; line-height: 1.2;
+  margin-bottom: 8px;
+}
+.page-sub {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem; color: var(--gold);
+  letter-spacing: 0.2em; opacity: 0.6; margin-bottom: 32px;
+}
+.header-rule {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; max-width: 400px; margin: 0 auto 28px;
+}
+.header-rule::before { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold)); }
+.header-rule::after  { content: ''; flex: 1; height: 1px; background: linear-gradient(to left,  transparent, var(--gold)); }
+.header-rule span { color: var(--gold); font-size: 1.1rem; }
+.intro-text {
+  max-width: 620px; margin: 0 auto;
+  color: var(--text-dim); font-style: italic;
+  font-size: 1.02rem; line-height: 1.8;
+}
+
+/* ── FILTER BAR ── */
+.filter-bar {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  gap: 8px; padding: 20px 24px 0; max-width: 900px; margin: 0 auto;
+}
+.filter-btn {
+  font-family: 'Cinzel', serif; font-size: 0.6rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text-dim); background: none;
+  border: 1px solid var(--divider);
+  padding: 6px 16px; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.filter-btn:hover, .filter-btn.active {
+  color: var(--gold-light); border-color: var(--gold);
+  background: rgba(201,162,39,0.06);
+}
+
+/* ── SESSION LIST ── */
+.session-list {
+  max-width: 860px; margin: 0 auto;
+  padding: 40px 24px 100px;
+  display: flex; flex-direction: column; gap: 0;
+}
+
+/* ── SESSION CARD ── */
+.session-card {
+  border-left: 1px solid var(--divider);
+  padding: 0 0 48px 32px;
+  position: relative;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.session-card.visible { opacity: 1; transform: translateY(0); }
+
+/* timeline dot */
+.session-card::before {
+  content: '';
+  position: absolute;
+  left: -5px; top: 6px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(201,162,39,0.5);
+}
+
+/* session number label */
+.session-num {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--ember);
+  margin-bottom: 4px;
+}
+.session-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 1.18rem; color: var(--gold-light);
+  margin-bottom: 6px; line-height: 1.3;
+}
+.session-meta {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  margin-bottom: 18px; align-items: center;
+}
+.session-date {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem; letter-spacing: 0.15em;
+  color: var(--text-dim); font-style: normal;
+}
+.session-loc {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem; letter-spacing: 0.12em;
+  color: var(--text-dim);
+}
+.session-loc::before { content: '📍 '; font-style: normal; opacity: 0.6; }
+
+.session-divider {
+  width: 40px; height: 1px;
+  background: var(--divider); margin-bottom: 16px;
+}
+.session-body {
+  color: var(--text); font-size: 0.97rem; line-height: 1.8;
+}
+.session-body p + p { margin-top: 12px; }
+
+/* highlights box */
+.session-highlights {
+  margin-top: 20px;
+  border: 1px solid var(--divider);
+  background: rgba(201,162,39,0.04);
+  padding: 16px 20px;
+}
+.highlights-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--gold);
+  margin-bottom: 10px;
+}
+.highlights-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.highlights-list li {
+  font-size: 0.9rem; color: var(--text-dim);
+  padding-left: 16px; position: relative;
+}
+.highlights-list li::before {
+  content: '✦';
+  position: absolute; left: 0;
+  color: var(--gold); font-size: 0.55rem;
+  top: 6px;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 32px 24px 52px;
+  border-top: 1px solid var(--divider);
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem; letter-spacing: 0.22em;
+  color: var(--gold-dark); text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<nav class="gnav">
+  <span class="gnav-brand">⚔ COMPENDIUM OF AGNITHAR</span>
+  <span class="gnav-sep">|</span>
+  <a href="index.html">Home</a>
+  <a href="mythology.html">Mythology</a>
+  <a href="recap.html" class="active">Recaps</a>
+  <a href="maps.html">Maps</a>
+  <a href="characters.html">Characters</a>
+</nav>
+
+<header>
+  <p class="eyebrow">The Compendium of Agnithar</p>
+  <h1 class="page-title">Session Recaps</h1>
+  <p class="page-sub">A Chronicle of Deeds</p>
+  <div class="header-rule"><span>✦</span></div>
+  <p class="intro-text">
+    Every deed, every choice, every narrow escape. The full chronicle of the party's journey — from the wine cellars of Harvestshire to the burning vaults of Grun Dhonir and beyond.
+  </p>
+</header>
+
+<div class="session-list">
+
+  <!-- ── SESSION 0 ── -->
+  <div class="session-card" data-arc="heartlands">
+    <div class="session-num">Prelude</div>
+    <div class="session-title">The Dice Caravan Forms</div>
+    <div class="session-meta">
+      <span class="session-date">12th Day of Lorveth's Shade, 728 AC</span>
+      <span class="session-loc">The Heartlands</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>Before the adventure began in earnest, two strangers fell into the orbit of Samuel Dice, a retired smuggler turned caravaneer with a talent for collecting interesting people.</p>
+      <p><strong>Gu Reed</strong> — travelling under the alias Bilbus Elderberry — sought Samuel's help tracking down a former ally who had betrayed him years ago. <strong>Lollylips</strong>, a paladin burning with grief and the need for vengeance, was taken in after sharing her story. Samuel promised to use his network for both of them. In return, they agreed to ride with the caravan.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>Gu Reed joins under the alias Bilbus Elderberry, hiding his true identity</li>
+        <li>Lollylips joins in exchange for Samuel's help finding Natashaly's killers</li>
+        <li>The Dice Caravan forms — the adventure begins</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 1 ── -->
+  <div class="session-card" data-arc="heartlands">
+    <div class="session-num">Session I</div>
+    <div class="session-title">Blood &amp; Wine</div>
+    <div class="session-meta">
+      <span class="session-date">3rd Day of Barthimir's Lore, 728 AC</span>
+      <span class="session-loc">Harvestshire, the Heartlands</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>The caravan arrived in Harvestshire with a job already waiting. The <strong>Redheart Winery</strong> — owned by Vanessa Redheart, an old contact of Samuel's — was in trouble. Something was loose in the cellar.</p>
+      <p>What they found was a sedated <strong>Displacer Beast</strong>, smuggled in by agents of the <strong>Black Ledger Association</strong> on behalf of the rival Proudvine family. The beast had already killed a worker. Gu and Lollylips, with the help of Old Ben and the circus's white dragon hatchling Jean-Pierre, took it down.</p>
+      <p>Vanessa was grateful. She offered them each a <strong>10% stake</strong> in the winery's income. The Redheart Winery won a contest in Grapevine Square that same week. Before the celebration ended, a note arrived from a Black Ledger agent named Erenfried Fairbarn: a warning not to interfere again.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>Displacer Beast defeated in the Redheart cellar</li>
+        <li>Gu and Lollylips become 10% shareholders in the Redheart Winery</li>
+        <li>Gu reveals his true name to Lollylips and Vanessa</li>
+        <li>The Black Ledger Association sends a warning note</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 2 ── -->
+  <div class="session-card" data-arc="heartlands">
+    <div class="session-num">Session II</div>
+    <div class="session-title">The Thermalin Culinary Festival</div>
+    <div class="session-meta">
+      <span class="session-date">17th Day of Barthimir's Lore, 728 AC</span>
+      <span class="session-loc">Thermalin, the Heartlands</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>An acquaintance of Samuel's — the wizard <strong>Thibaldonius</strong> — needed help at the annual culinary festival after waking up the day before with a severe hangover. The party stepped in to finish his preparations.</p>
+      <p>Gu, Lollylips, and the newly arrived <strong>Lando Ashveil</strong> competed in the <strong>Thermalin Culinary Contest</strong> and won first place, claiming three prizes: a <strong>Gold, Silver, and Bronze dragon egg</strong>. During the competition they also befriended a boisterous goliath named <strong>Armagh Cliffdiver</strong> after a friendly wrestling match.</p>
+      <p>What the party did not know: the eggs were bait. The <strong>Pureborn dragons</strong> and the <strong>Hidden Light</strong> had placed them at the contest to lure a dangerous blue dragon out of hiding. Young dragon agents began tailing the party. Samuel, sensing the eggs would draw trouble, recruited the dwarf mercenary <strong>Balinor</strong> for added security.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>Party wins the Thermalin Culinary Contest and claims three dragon eggs</li>
+        <li>Lando Ashveil joins the caravan</li>
+        <li>Balinor is hired on for security</li>
+        <li>The eggs are secretly bait — dragon agents begin following the party</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 3 ── -->
+  <div class="session-card" data-arc="heartlands">
+    <div class="session-num">Session III</div>
+    <div class="session-title">The Banshee of Willowfen</div>
+    <div class="session-meta">
+      <span class="session-date">1st Day of Morden's Axe, 728 AC</span>
+      <span class="session-loc">Willowfen, the Heartlands</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>On the road back to Harvestshire, the caravan stumbled upon the village of <strong>Willowfen</strong> — haunted by a <strong>banshee</strong>. The spirit was the ghost of an elven woman, murdered by her own husband after she attempted to sacrifice their half-elven daughter in a ritual to preserve her youth.</p>
+      <p>The party, alongside the Livian monster hunter <strong>Beralt of Livia</strong> and the village Lightkeeper, successfully banished her and saved the village.</p>
+      <p>The more unexpected event of the night was <strong>Balinor's Scion Flame ritual</strong>. When he touched the sacred flame to join the Light of Dawn — done purely to earn the Lightkeeper's cooperation — the flame did not simply burn his hand. It spread all the way up his arm and to his neck. His eyes lit gold. He saw a vision of the God-King Havilar himself, who asked: <em>"Do you accept Justice?"</em> When Balinor said yes, Havilar told him: <em>"Then come to my Crossing."</em></p>
+      <p>The Lightkeeper reported the event up the chain. Balinor was later collected by two Sons of Havilar and taken to the capital.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>The banshee of Willowfen is banished</li>
+        <li>Balinor receives a divine vision of Havilar during the Scion Flame ritual</li>
+        <li>Balinor is taken to Havilar's Crossing by the Sons of Havilar</li>
+        <li>Beralt of Livia is met for the first time</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 4 ── -->
+  <div class="session-card" data-arc="grundh">
+    <div class="session-num">Session IV</div>
+    <div class="session-title">Departure &amp; The Golden Grace</div>
+    <div class="session-meta">
+      <span class="session-date">9th Day of Morden's Axe, 728 AC</span>
+      <span class="session-loc">Harvestshire → The Central Sea</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>Reunited in Harvestshire, the party — now Gu, Lollylips, and Lando — met for the first time properly over drinks at the Redheart Winery. Gu and Lollylips collected their winery earnings. The wandering skald <strong>Halvik Fjornhall</strong> joined them after Gu beat him in a drinking contest, swearing to follow and write songs about their adventures.</p>
+      <p>Samuel urged the group to leave quickly. The dragon eggs were drawing attention. He arranged passage aboard <strong>The Golden Grace</strong>, captained by Aurelio Windrose, bound for Havilar's Crossing. Unknown to the party, Hidden Light agents were disguised as crew, and three young dragons were also aboard in animal form — a golden chameleon, a silver priestess, a bronze cat.</p>
+      <p>That night, two pirate ships attacked. The pirates killed Halvik and several crew. Their captain — a man with blue eyes who seemed to command the storm itself — was <strong>Lorgomathrix</strong>, a blue dragon, going by the alias Captain Blackstorm. He wanted the eggs. Lollylips, watching her companions fall, seized the wheel and threw the ship into a violent turn. The masts cracked. Both pirate ships were torn apart. Everyone was flung into the sea — and strange aquatic figures guided the survivors to shore.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>Halvik Fjornhall joins the party — and is killed in the pirate attack</li>
+        <li>The Golden Grace is destroyed; the Gold and Bronze eggs are lost at sea</li>
+        <li>Lorgomathrix (Captain Blackstorm) reveals himself as a blue dragon seeking the eggs</li>
+        <li>Lollylips crashes the ship to stop the pirates</li>
+        <li>Lollylips takes Halvik's Stormbeat Axe as a keepsake; Gu leaves his necklace with the body</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 5 ── -->
+  <div class="session-card" data-arc="grundh">
+    <div class="session-num">Session V</div>
+    <div class="session-title">Arrival in the Great Hills</div>
+    <div class="session-meta">
+      <span class="session-date">11th Day of Morden's Axe, 728 AC</span>
+      <span class="session-loc">The Great Hills, Lowlands</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>The survivors washed ashore on an unknown beach in the <strong>Great Hills</strong>. Lollylips woke first and found a young dwarf named <strong>Rhumli</strong>, who told her where they were. They found Lando — who had received a vision from Asharoth while unconscious, thanking him for the pirate souls and promising rewards — and eventually discovered <strong>Gu's body</strong> on the sand.</p>
+      <p>Then a surge of wild magic revived him. A whisper said <em>"not today."</em> Gu rose, smelling faintly of sage. He had no memory of dying or being revived the first time, years ago — but this second death began pulling fragments loose.</p>
+      <p>The party gave Halvik a proper Northerner's sea burial on the shore, then headed west toward Grun Dhonir. A disastrous goat hunt led them directly to the homestead of <strong>Rhuon Arazan</strong>, a stern dwarven veteran. His wife <strong>Brymva</strong> took pity on them and gave them shelter for the night. Gu shed his alias Bilbus Elderberry that night, telling Lando his real name and the truth about Flingus.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>Gu is found dead on the shore — then revived by a surge of wild magic</li>
+        <li>Halvik receives a sea burial; Lando performs the Northerner's rites</li>
+        <li>Gu abandons the Bilbus Elderberry alias permanently</li>
+        <li>Lando reveals hints of his own past to Gu</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 6 ── -->
+  <div class="session-card" data-arc="grundh">
+    <div class="session-num">Session VI</div>
+    <div class="session-title">Arrival in Grun Dhonir</div>
+    <div class="session-meta">
+      <span class="session-date">12th–13th Day of Morden's Axe, 728 AC</span>
+      <span class="session-loc">Grun Dhonir, the Great Hills</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>Entering the city, the party noticed a heavily guarded cart rolling through the Steel Exchange. Lando felt an immediate pull toward whatever was inside. Gu charmed a guard into confessing: the <strong>Silver dragon egg</strong> had been found on the shore by Grun Dhonir guards and was being moved to the <strong>Vaults of Lore</strong>.</p>
+      <p>Samuel steered them to <strong>The Stout and Steel</strong> tavern, where they met <strong>Dorra Flintfist</strong> and a friendly dwarven bard going by the name <strong>Borim the Whistleblower</strong>. Hours later, the charm wore off the guard and the city went into quiet lockdown — all "unclean races" were to be detained.</p>
+      <p>The next morning, Lando woke to find <strong>Asharoth</strong> in the hearth flames, stronger than ever, granting him an Infernal Tome and upgrading their pact. <strong>Lollylips had vanished overnight</strong>, leaving a note: her personal quest came first. She was gone, alone, toward Twin Spires.</p>
+      <p>Borim offered the party two options: confess to a minor crime and pursue the egg legally, or attempt a secret passage into the Vaults. A singing goblin at the bar had been eavesdropping throughout — <strong>Grog Fullmug</strong>, who turned out to have worked with Triv. After some negotiation, Grog joined them.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>The Silver egg is in the Vaults of Lore — Lando can feel its pull</li>
+        <li>Asharoth upgrades Lando's pact to the Pact of the Tome</li>
+        <li>Lollylips leaves the party, departing alone for Twin Spires</li>
+        <li>Grog Fullmug joins the party</li>
+        <li>Borim steers them toward a Vault heist</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 7 ── -->
+  <div class="session-card" data-arc="grundh">
+    <div class="session-num">Session VII</div>
+    <div class="session-title">Into the Khar-Grond Caves</div>
+    <div class="session-meta">
+      <span class="session-date">13th Day of Morden's Axe, 728 AC</span>
+      <span class="session-loc">Grun Dhonir — Hidden Caves</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>With guards everywhere, Lando used Invisibility to keep himself and Gu hidden while <strong>Grog talked his way past every checkpoint</strong> with lies and charm. Eventually they found a hidden door concealed behind a rock — the entrance to the secret cave network Clan Khar-Grond had built between the Deepforge Quarter and their clanhold.</p>
+      <p>Inside, they stumbled into the caves' dumping ground for scrap metal — and into a nest of <strong>rust monsters</strong>. They fought them off, keeping one alive as a guide. The creature led them to <strong>Argenir the Cavedweller</strong> — an ancient, blind hermit who had lived in the caves for centuries after abandoning Grun Dhonir's politics. He gave them a crucial piece of information: the name of the dwarf whose Soulstone was locked deep in the tunnels. <strong>Oradin Grondbreaker</strong>.</p>
+      <p>He also gave them something else in exchange for a mushroom they had found: a <strong>potion of fire immunity</strong>.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>Rust monsters defeated; one kept alive as a guide</li>
+        <li>Argenir the Cavedweller met in the hidden caves</li>
+        <li>Name of Oradin Grondbreaker obtained — key to bypassing the Vault construct</li>
+        <li>Potion of fire immunity acquired</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 8 ── -->
+  <div class="session-card" data-arc="grundh">
+    <div class="session-num">Session VIII</div>
+    <div class="session-title">The Grun Dhonir Heist</div>
+    <div class="session-meta">
+      <span class="session-date">13th Day of Morden's Axe, 728 AC</span>
+      <span class="session-loc">Grun Dhonir — Clanhold Enclave &amp; Vaults of Lore</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>Using Oradin's ancient Soulstone to verify their identity to a Khar-Grond construct, the party bypassed the cave's final guardian and entered the Clanhold Enclave. Borim met them there, promising the guards inside the Vaults would be distracted.</p>
+      <p>Past the workshop, past the guards, through a five-clan sigil puzzle — tripped with a minor alarm but covered by Grog's illusions — and into the Vaults themselves. They found the Silver egg.</p>
+      <p>Then Borim walked through the front door with two Thol-Run Runeguards and <strong>Samuel Dice in shackles</strong>. He dropped the alias: he was <strong>Dhamon Thol-Run</strong>, Heir-Thane to Clan Thol-Run, and he intended to take the egg and eliminate the party as loose ends. Since the egg had bonded with Lando, Dhamon said Lando had to die.</p>
+      <p>Gu threw a <strong>fire wine cocktail</strong>. It missed the targets and hit a row of bookcases. The Vaults caught fire.</p>
+      <p>The party fought and won. Gu drank the fire potion and walked through the flames, emerging with a small urn of ashes he kept secret from everyone. Grog stole extra loot and pocketed <strong>Dhamon's magic whistle</strong>. Samuel was freed. Dhamon was left hypnotized in the burning library.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>The Silver egg is recovered</li>
+        <li>Borim reveals himself as Dhamon Thol-Run — the betrayal</li>
+        <li>Gu accidentally sets the Vaults of Lore on fire</li>
+        <li>Dhamon left hypnotized in the burning library</li>
+        <li>Gu takes a mysterious urn of ashes; Grog steals Dhamon's magic whistle</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── SESSION 9 ── -->
+  <div class="session-card" data-arc="grundh">
+    <div class="session-num">Session IX</div>
+    <div class="session-title">The Escape &amp; The Golden Carriage</div>
+    <div class="session-meta">
+      <span class="session-date">14th Day of Morden's Axe, 728 AC</span>
+      <span class="session-loc">Grun Dhonir → Havilar's Crossing</span>
+    </div>
+    <div class="session-divider"></div>
+    <div class="session-body">
+      <p>Smoke filling the halls, the party fled deeper into the Vaults and found <strong>Stonewarden Himnir</strong> in his chamber of Soulstones. The old dwarf, disgusted by Dhamon's ambition, agreed to help them escape — on the condition they return what they had taken. Most of the party complied. Gu quietly kept the ashes. Grog returned only half his loot.</p>
+      <p>Himnir pointed them toward a hidden vent in the Chamber of the Founders. Samuel and Lando searched the Vaults and found an <strong>ancient key</strong> and a <strong>strange compass</strong>. The party slipped past guards using Blink Dogs — which Gu convinced with Sylvan to leave them alone — and escaped through the vent to the surface. Himnir's parting words: <em>"The Stonefather sees all."</em></p>
+      <p>Outside, a gilded carriage waited with four Imperial Guards and a mysterious nobleman calling himself Aurion. He read an Imperial Command: the party — and Grog — were to be taken to the <strong>Sacred Council Chambers</strong> in Havilar's Crossing. Two golden wyverns lifted the carriage into the sky.</p>
+      <p>Midair, Aurion revealed himself as <strong>Aurionthrimar</strong>, the Golden Pureborn dragon. He explained the eggs had been bait to lure the blue dragon Lorgomathrix. The plan had gone wrong — there were more casualties than intended. He confirmed that <strong>Lando's bond with the Silver egg is real</strong>, but warned: <em>the egg will not hatch as long as his pact with Asharoth stands.</em> He apologized for what the party had been put through and was taking them to the Council to decide what happens next.</p>
+    </div>
+    <div class="session-highlights">
+      <div class="highlights-label">Key Moments</div>
+      <ul class="highlights-list">
+        <li>Stonewarden Himnir helps the party escape; warns the Stonefather sees all</li>
+        <li>A special compass and ancient key found in the Vaults</li>
+        <li>Aurionthrimar reveals himself as the Golden Pureborn</li>
+        <li>The dragon egg bait plot is explained — it went wrong</li>
+        <li>Lando's bond to the Silver egg confirmed; it will not hatch while Asharoth's pact holds</li>
+        <li>The party is taken to Havilar's Crossing by Imperial wyvern carriage</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  The World of Agnithar &nbsp;✦&nbsp; All content is canonical &nbsp;✦&nbsp; 728 AC
+</footer>
+
+<script>
+const cards = document.querySelectorAll('.session-card');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+cards.forEach(c => obs.observe(c));
+</script>
+</body>
+</html>
